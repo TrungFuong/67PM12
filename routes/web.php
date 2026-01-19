@@ -14,11 +14,33 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
-Route::get('/hello', function () {
-    return view('hello');
+
+Route::prefix('product')->group(function () {
+    Route::get('/', function () {
+        return view('product.index');
+    });
+
+    Route::get('/add', function () {
+        return view('product.add');
+    });
+
+    Route::get('/{id?}', function (int $id = 123) {
+        return "ID: $id";
+    });
+});
+
+Route::get('/sinhvien/{name?}/{mssv?}', function (
+    $name = 'Luong Xuan Hieu',
+    $mssv = "123456"
+) {
+    return "Name: " . $name . " MSSV: " . $mssv;
+});
+
+Route::get('/banco/{n}', function ($n) {
+    return view('banco', ['n' => $n]);
 });
 
 Route::get('/test', function () {
@@ -31,4 +53,9 @@ Route::get('/user', function () {
 
 Route::get('user/{id}', function(int $id){
     return "ID: " . $id;
+});
+
+Route::fallback(function () {
+    return response()
+        ->view('error.404', [], 404);
 });

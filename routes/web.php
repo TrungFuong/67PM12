@@ -16,3 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/hello', function () {
+    return view('hello');
+});
+
+Route::get('/test', function () {
+    return response()->json(['message' => 'HIHIHIHIHI']);
+});
+
+Route::get('/user', function () {
+    return view('user.user_list');
+});
+
+Route::get('user/{id}', function(int $id){
+    return "ID: " . $id;
+});

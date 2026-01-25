@@ -34,6 +34,9 @@ class AuthController extends Controller
         $password = $request->input('password');
         $confirmPassword = $request->input('password_confirmation');
 
-        return "OK: Username - $username, Password - $password";
+        if ($password == $confirmPassword) {
+            return "OK: Username - $username, Password - $password";
+            }
+        return "Mật khẩu không khớps";
     }    
 }

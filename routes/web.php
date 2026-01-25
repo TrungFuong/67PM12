@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,19 +20,25 @@ Route::get('/', function () {
 });
 
 
+//Route::prefix('product')->group(function () {
+    //Route::get('/', [ProductController::class, 'index']);
+    //Route::get('/add', [ProductController::class, 'add']);
+    //Route::get('detail/{id?}', [ProductController::class, 'getDetail']);
+//});
+
 Route::prefix('product')->group(function () {
-    Route::get('/', function () {
-        return view('product.index');
-    });
-
-    Route::get('/add', function () {
-        return view('product.add');
-    });
-
-    Route::get('/{id?}', function (int $id = 123) {
-        return "ID: $id";
-    });
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/add', 'create')->name('add');
+        Route::get('detail/{id?}', 'getDetail');
+        Route::post('/store', 'store')->name('store'); 
+        });
 });
+
+Route::get('login', [AuthController::class, 'login']);
+Route::post('checklogin', [AuthController::class, 'checkLogin']);
+Route::get('register', [AuthController::class, 'register']);
+Route::post('register-action', [AuthController::class, 'registerAction']);
 
 Route::get('/sinhvien/{name?}/{mssv?}', function (
     $name = 'Luong Xuan Hieu',
@@ -47,9 +55,7 @@ Route::get('/test', function () {
     return response()->json(['message' => 'HIHIHIHIHI']);
 });
 
-Route::get('/user', function () {
-    return view('user.user_list');
-});
+Route::get('/user', [UserController::class, 'index']);
 
 Route::get('user/{id}', function(int $id){
     return "ID: " . $id;

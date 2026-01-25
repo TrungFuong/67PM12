@@ -6,25 +6,22 @@
     <title>Products</title>
 </head>
 <body>
+    <h1>{{$title}}</h1>
     <table border="1 solid back" align="center">
         <tr>
+            <th>ID</th>
             <th>Product</th>
             <th>Price</th>
         </tr>
+        @foreach ($products as $product)
         <tr>
-            <td>Iporn 11</td>
-            <td>67$</td>
+            <td>{{$product['id']}}</td>
+            <td>{{$product['name']}}</td>
+            <td>{{$product['price']}}</td>
         </tr>
+        @endforeach
         <tr>
-            <td>SamSung Galaxy Z</td>
-            <td>45$</td>
-        </tr>
-        <tr>
-            <td>Xiaomi Note 11</td>
-            <td>23$</td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
+            <td colspan="3" align="center">
                 <a href="/product/add">Add Product</a>
             </td>
     </table>

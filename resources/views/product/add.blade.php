@@ -6,14 +6,15 @@
     <title>Add product</title>
 </head>
 <body>
-    <form action="/product">
+    <form method="POST" action="/product/store">
+        @csrf
         <div>
             <label for="name">Name</label>
             <input id="name" type="text" name="name" required>
         </div>
         <div>
             <label for="price">Price</label>
-            <input id="price" type="number" name="price" min="0" step="0.01" required>
+            <input id="price" type="number" name="price" required>
         </div>
         <button type="submit">Add Product</button>
     </form>

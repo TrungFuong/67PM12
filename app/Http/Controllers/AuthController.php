@@ -23,9 +23,9 @@ class AuthController extends Controller
         }
     }
 
-    public function register()
+    public function signin()
     {
-        return view('auth.register');
+        return view('auth.signin');
     }
 
     public function registerAction(Request $request)
@@ -33,10 +33,24 @@ class AuthController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
         $confirmPassword = $request->input('password_confirmation');
+        $mssv = $request->input('mssv');
+        $lop_mon_hoc = $request->input('lop_mon_hoc');
+        $gioi_tinh = $request->input('gioi_tinh');
 
-        if ($password == $confirmPassword) {
-            return "OK: Username - $username, Password - $password";
-            }
-        return "Mật khẩu không khớps";
+
+
+        if ($password != $confirmPassword) {
+            return "Đăng ký thất bại!";
+        }
+        if (
+            $username === "Phương" &&
+            $mssv === "025420" &&
+            $lop_mon_hoc === "LT20IT" &&
+            $gioi_tinh === "Nam"
+        ){
+            return "Đăng ký thành công!";
+        } else {
+            return "Đăng ký thất bại!";
+        }
     }    
 }

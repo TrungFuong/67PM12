@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\AgeValidation;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,29 +17,30 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-
-
 //Route::prefix('product')->group(function () {
     //Route::get('/', [ProductController::class, 'index']);
     //Route::get('/add', [ProductController::class, 'add']);
     //Route::get('detail/{id?}', [ProductController::class, 'getDetail']);
 //});
 
-Route::prefix('product')->group(function () {
+Route::get('/', [AuthController::class, 'getAge']);
+Route::post('/save-age', [AuthController::class, 'saveAge']);
+
+Route::prefix('product')->middleware([AgeValidation::class])->group(function () {
     Route::controller(ProductController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/add', 'create')->name('add');
         Route::get('detail/{id?}', 'getDetail');
         Route::post('/store', 'store')->name('store'); 
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::post('/update', 'update')->name('update');
+        Route::get('/delete/{id}', 'delete')->name('delete');
         });
 });
 
 Route::get('login', [AuthController::class, 'login']);
 Route::post('checklogin', [AuthController::class, 'checkLogin']);
-Route::get('register', [AuthController::class, 'register']);
+Route::get('signin', [AuthController::class, 'signin']);
 Route::post('register-action', [AuthController::class, 'registerAction']);
 
 Route::get('/sinhvien/{name?}/{mssv?}', function (

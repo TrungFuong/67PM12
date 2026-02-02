@@ -52,5 +52,19 @@ class AuthController extends Controller
         } else {
             return "Đăng ký thất bại!";
         }
-    }    
+    }
+
+    public function saveAge(Request $request)
+    {
+        $age = $request->input('age');
+        if (!is_numeric($age) || $age < 0 || $age < 18) {
+            return redirect()->back()->withErrors(['age' => 'Invalid age. You must be at least 18 years old.']);
+        }
+        session()->put('age', $age);
+        return redirect('/product');
+    }
+
+    public function getAge(){
+        return view('auth.ageValidation');
+    }
 }

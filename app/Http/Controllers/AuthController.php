@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login()
+    public function showLogin()
     {
         return view('auth.login');
+    }
+
+    public function logout(){
+        // Clear the session or perform logout logic here
+        session()->flush();
+        return redirect('login');
     }
 
     public function checkLogin(Request $request)
@@ -16,6 +22,7 @@ class AuthController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
+        // dd( $username, $password);
         if ($username === 'trungfuong' && $password === '4123') {
             return 'ok';
         } else {
@@ -52,5 +59,19 @@ class AuthController extends Controller
         } else {
             return "Đăng ký thất bại!";
         }
-    }    
+    }
+
+    public function saveAge(Request $request)
+    {
+        $age = $request->input('age');
+        if (!is_numeric($age) || $age < 0 || $age < 18) {
+            return redirect()->back()->withErrors(['age' => 'Invalid age. You must be at least 18 years old.']);
+        }
+        session()->put('age', $age);
+        return redirect('/product');
+    }
+
+    public function getAge(){
+        return view('auth.ageValidation');
+    }
 }

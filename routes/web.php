@@ -38,7 +38,7 @@ Route::prefix('product')->middleware([AgeValidation::class])->group(function () 
         });
 });
 
-Route::get('login', [AuthController::class, 'login']);
+Route::get('login', [AuthController::class, 'showLogin']);
 Route::post('checklogin', [AuthController::class, 'checkLogin']);
 Route::get('signin', [AuthController::class, 'signin']);
 Route::post('register-action', [AuthController::class, 'registerAction']);
@@ -62,6 +62,10 @@ Route::get('/user', [UserController::class, 'index']);
 
 Route::get('user/{id}', function(int $id){
     return "ID: " . $id;
+});
+
+Route::get('/admin', function(){
+    return view('layout.admin');
 });
 
 Route::fallback(function () {

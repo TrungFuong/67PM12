@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login()
+    public function showLogin()
     {
         return view('auth.login');
+    }
+
+    public function logout(){
+        // Clear the session or perform logout logic here
+        session()->flush();
+        return redirect('login');
     }
 
     public function checkLogin(Request $request)
@@ -16,6 +22,7 @@ class AuthController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
+        // dd( $username, $password);
         if ($username === 'trungfuong' && $password === '4123') {
             return 'ok';
         } else {

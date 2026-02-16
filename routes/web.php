@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Middleware\AgeValidation;
 
 /*
@@ -36,6 +37,17 @@ Route::prefix('product')->middleware([AgeValidation::class])->group(function () 
         Route::post('/update', 'update')->name('update');
         Route::get('/delete/{id}', 'delete')->name('delete');
         });
+});
+
+Route::prefix('category')->group(function () {
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/add', 'showAddCategoryForm')->name('category.add');
+        Route::post('/store', 'store')->name('category.store');
+        Route::get('/edit/{id}', 'edit')->name('category.edit');
+        Route::post('/update/{id}', 'update')->name('category.update');
+        Route::get('/delete/{id}', 'destroy')->name('category.delete');
+    });
 });
 
 Route::get('login', [AuthController::class, 'showLogin']);

@@ -26,8 +26,8 @@ use App\Http\Middleware\AgeValidation;
 
 Route::get('/', [AuthController::class, 'getAge']);
 Route::post('/save-age', [AuthController::class, 'saveAge']);
-
-Route::prefix('product')->middleware([AgeValidation::class])->group(function () {
+//->middleware([AgeValidation::class])
+Route::prefix('product')->group(function () {
     Route::controller(ProductController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/add', 'create')->name('add');

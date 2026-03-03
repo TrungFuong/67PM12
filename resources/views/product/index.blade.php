@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layouts.admin')
 @section('content')
 <table border="1 solid back" align="center" class="table table-bordered">
         <tr>

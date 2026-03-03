@@ -10,7 +10,7 @@ class ProductController extends Controller
     //
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('is_delete', 0)->get();
         $title = "Product List";
         return view('product.index', [
             'title' => $title,
@@ -30,18 +30,27 @@ class ProductController extends Controller
     
     public function store(Request $request)
     {
-        $product = new Product;
-        $name = $request->input('name');
-        $price = $request->input('price');
-        $stock = $request->input('stock');
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0|lte:price',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
 
-        $product->name = $name;
-        $product->price = $price;
-        $product->stock = $stock;
+        Product::create([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'price' => $request->price,
+            'sale_price' => $request->sale_price,
+            'stock' => $request->stock,
+            'description' => $request->description,
+            'image' => $request->image,
+            'is_active' => 1,
+            'is_delete' => 0
+        ]);
 
-        $product->save();
-
-        return redirect('/product');
+        return redirect('/product')->with('success', 'Thêm thành công');
         //return $request->all();
         //var_dump($request->all());
         //dd($request->all());
@@ -50,44 +59,37 @@ class ProductController extends Controller
     
     public function edit($id)
     {
-        $product = Product::find($id);
-        return view('product.edit', ['product' => $product]);
+        $product = Product::where('is_delete', 0)->findOrFail($id);
+        $categories = Category::all();
+
+        //compact biến value thành key, kiểu như compact('product', 'categories') = ['product' = $product]
+        return view('product.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request)
     {
-        $id = $request->input('id');
-        $product = Product::find($id);
-        if (!$product) {
-            return redirect('/product')->with('error', '0 có sp');
-        }
-        if ($request->has('name')) {
-            $product->name = $request->input('name');
-        } else {
-            $product->name = $product->name;
-        }
-        if ($request->has('price')) {
-            $product->price = $request->input('price');
-        } else {
-            $product->price = $product->price;
-        }
-        if ($request->has('stock')) {
-            $product->stock = $request->input('stock');
-        } else {
-            $product->stock = $product->stock;
-        }
-        
-        $product->save();
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0|lte:price',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
 
-        return redirect('/product');
+        $product = Product::findOrFail($request->id);
+
+        $product->update($request->all());
+
+        return redirect('/product')->with('success', 'Cập nhật thành công');
     }
 
     public function delete($id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            $product->delete();
-        }
+        $product = Product::FindOrFail($id);
+        $product->update([
+            'is_delete' => 1
+        ]);
+
         return redirect('/product');
     }
 }
